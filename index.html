@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRP Lab - Протокол за Реконсолидация</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --primary-text: #1e293b;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --soft-blue: #eff6ff;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            align-self: flex-start;
+            margin-top: 40px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-color);
+            width: 25%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-text);
+        }
+
+        p.subtitle {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 16px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            resize: none;
+            box-sizing: border-box;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 16px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .timer-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--soft-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px auto;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            position: relative;
+        }
+
+        .mismatch-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .old-truth-card {
+            background-color: #fef2f2;
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid #fee2e2;
+            color: #991b1b;
+            font-size: 0.95rem;
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--success-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+        }
+
+        .info-box {
+            background: var(--soft-blue);
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            color: #1e40af;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Step 1: Identification -->
+    <div class="step active" id="step1">
+        <h1>Подготовка</h1>
+        <p class="subtitle">Дефиниране на емоционалния модел.</p>
+        
+        <label>Какво усещаш в тялото си?</label>
+        <textarea id="symptom" rows="2" placeholder="Напр. тежест, стягане, паника..."></textarea>
+        
+        <label>Емоционална истина (вярването на амигдалата)</label>
+        <textarea id="emotionalTruth" rows="3" placeholder="Напр. 'Ако направя грешка, ще остана сама и никой няма да ме обича.'"></textarea>
+        
+        <button class="btn" onclick="nextStep(2)">Продължи</button>
+    </div>
+
+    <!-- Step 2: Reactivation -->
+    <div class="step" id="step2">
+        <h1>Реактивация</h1>
+        <p class="subtitle">Отваряне на невронния файл чрез преживяване.</p>
+        
+        <div class="timer-circle" id="timer">45</div>
+        <p style="text-align:center; color: #64748b;">Затвори очи и почувствай вярването за момент.</p>
+        
+        <button class="btn" id="timerBtn" onclick="startTimer()">Започни (45 сек)</button>
+    </div>
+
+    <!-- Step 3: Mismatch -->
+    <div class="step" id="step3">
+        <h1>Несъответствие</h1>
+        <p class="subtitle">Създаване на грешка в предсказанието.</p>
+        
+        <div class="mismatch-grid">
+            <label>Старата Истина (Амигдала)</label>
+            <div class="old-truth-card" id="displayOldTruth"></div>
+            
+            <label>Новият Опит (Реалност)</label>
+            <textarea id="newExperience" rows="3" placeholder="Какво чувстваш СЕГА, което противоречи на горното?"></textarea>
+        </div>
+        
+        <button class="btn" onclick="nextStep(4)">Обнови паметта</button>
+    </div>
+
+    <!-- Step 4: Integration -->
+    <div class="step" id="step4">
+        <div class="success-icon">✓</div>
+        <h1 style="text-align:center;">Процесът започна</h1>
+        <p style="text-align:center; color: #64748b;">Синапсите са отключени за презаписване.</p>
+        
+        <div class="info-box">
+            <strong>Важно за следващите 6 часа:</strong><br>
+            Твоето тяло в момента физически променя невронния път. Всеки път, когато усетиш стария страх, си напомняй за новия опит.
+        </div>
+        
+        <button class="btn" style="margin-top: 30px; background: #f1f5f9; color: #475569;" onclick="location.reload()">Затвори</button>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+
+    function nextStep(step) {
+        if(step === 2 && !document.getElementById('emotionalTruth').value) {
+            alert('Моля, опиши емоционалната истина.');
+            return;
+        }
+        
+        if(step === 3) {
+            document.getElementById('displayOldTruth').innerText = document.getElementById('emotionalTruth').value;
+        }
+
+        document.getElementById(`step${currentStep}`).classList.remove('active');
+        currentStep = step;
+        document.getElementById(`step${currentStep}`).classList.add('active');
+        
+        const progress = (currentStep / 4) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+    }
+
+    function startTimer() {
+        let timeLeft = 45;
+        const timerBtn = document.getElementById('timerBtn');
+        timerBtn.style.display = 'none';
+        
+        const countdown = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                nextStep(3);
+            }
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
