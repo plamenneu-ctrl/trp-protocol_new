@@ -1,0 +1,49 @@
+body {
+  font-family: Arial;
+  background: #f3f7fb;
+  margin: 0;
+  padding: 20px; [cite: 9]
+}
+
+.container {
+  max-width: 500px;
+  margin: auto; [cite: 10]
+}
+
+.old-truth-display {
+  background: #ffe6e6;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border-left: 5px solid #ff4d4d;
+}
+
+button {
+  background: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+textarea {
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.hidden {
+  display: none;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  margin-top: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
